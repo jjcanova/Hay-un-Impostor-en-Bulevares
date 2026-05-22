@@ -1,0 +1,279 @@
+:root {
+    --bg-dark: #0a0b10;
+    --bg-panel: #121420;
+    --primary-violet: #4a148c;
+    --accent-violet: #7c4dff;
+    --text-main: #e0e0e6;
+    --text-muted: #75758a;
+    --border-color: #23273a;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center;     /* Centrado vertical */
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.game-header h1 {
+    font-size: 2.2rem;
+    letter-spacing: 5px;
+    line-height: 1.2;
+    margin: 0;
+    display: inline-block; /* Evita desplazamientos inesperados */
+    text-shadow: 0 0 15px rgba(124, 77, 255, 0.5);
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    margin-top: 10px;
+}
+
+.setup-box {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px; /* Tamaño fijo para que no baile */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.panel-title {
+    color: var(--accent-violet);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* Estilos de los selectores numéricos */
+.stepper-group {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.stepper-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.stepper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: var(--bg-dark);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.step-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 30px;
+    transition: color 0.2s;
+}
+
+.step-btn:hover {
+    color: var(--accent-violet);
+}
+
+.step-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    min-width: 40px;
+}
+
+small {
+    display: block;
+    margin-top: 5px;
+    color: #444;
+    font-size: 0.7rem;
+}
+
+/* Botones y inputs */
+.btn-primary {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-violet), #311b92);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.divider {
+    text-align: center;
+    margin: 15px 0;
+    color: var(--text-muted);
+}
+
+.join-group {
+    display: flex;
+    gap: 10px;
+}
+
+#room-code {
+    flex: 2;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.btn-secondary {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+}
+/* --- ESTILOS DEL LOBBY --- */
+.lobby-box {
+    max-width: 550px; /* Un poco más ancho para la cuadrícula */
+}
+
+.lobby-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.lobby-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+}
+
+.lobby-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    color: var(--accent-violet);
+    font-weight: bold;
+}
+
+/* La Grilla de 30 Jugadores */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    background: var(--bg-dark);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    max-height: 300px;
+    overflow-y: auto; /* Scroll sutil si hay muchos */
+    margin-bottom: 20px;
+}
+
+/* Tarjeta de Jugador Individual */
+.player-card {
+    background: linear-gradient(145deg, #1a1b26, #121420);
+    border: 1px solid var(--border-color);
+    padding: 15px 5px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+
+.player-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-violet);
+}
+
+.player-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-violet);
+    border-radius: 10px; /* Un poco más cuadrado/moderno */
+    margin-bottom: 10px;
+    border: 2px solid var(--accent-violet);
+    box-shadow: 0 0 10px rgba(124, 77, 255, 0.4);
+}
+
+.player-card.host .player-icon {
+    border-color: #ffca28; /* Dorado para el dueño */
+    box-shadow: 0 0 15px rgba(255, 202, 40, 0.4);
+}
+
+.player-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.host-badge {
+    font-size: 0.6rem;
+    color: #ffca28;
+    margin-top: 4px;
+    font-weight: bold;
+}
+.hidden {
+    display: none !important;
+}
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    border: 1px solid var(--accent-violet) !important;
+    box-shadow: 0 0 30px rgba(124, 77, 255, 0.4) !important;
+}
+
+#player-name-input {
+    width: 100%;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
