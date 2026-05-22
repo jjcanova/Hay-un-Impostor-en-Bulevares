@@ -1,7 +1,7 @@
 const socket = io();
 let pendingCode = null;
+let currentRoomCode = null;
 
-// Botones +/-
 window.changeValue = function(type, delta) {
     const id = type === 'players' ? 'val-players' : 'val-impostors';
     const el = document.getElementById(id);
@@ -10,28 +10,28 @@ window.changeValue = function(type, delta) {
     el.innerText = val;
 };
 
-// Abrir Modal para CREAR
+window.closeModal = function() {
+    document.getElementById('modal-name').classList.add('hidden');
+};
+
 document.getElementById('btn-create').onclick = () => {
     pendingCode = null;
     document.getElementById('modal-name').classList.remove('hidden');
 };
 
-// Abrir Modal para UNIRSE
 document.getElementById('btn-join').onclick = () => {
-    const code = document.getElementById('room-code').value.trim();
+    const code = document.getElementById('room-code').value.trim().toUpperCase();
     if (code.length === 6) {
-        pendingCode = code.toUpperCase();
+        pendingCode = code;
         document.getElementById('modal-name').classList.remove('hidden');
     } else {
-        alert("Escribe un código de 6 letras.");
+        alert("Código de 6 letras.");
     }
 };
 
-// Confirmar nombre en el Modal
 document.getElementById('btn-confirm-name').onclick = () => {
     const name = document.getElementById('player-name-input').value.trim();
-    if (!name) return alert("Poné un nombre.");
-
+    if (!name) return;
     if (pendingCode) {
         socket.emit('joinRoom', { username: name, code: pendingCode });
     } else {
@@ -39,19 +39,54 @@ document.getElementById('btn-confirm-name').onclick = () => {
         const i = document.getElementById('val-impostors').innerText;
         socket.emit('createRoom', { username: name, players: parseInt(p), impostors: parseInt(i) });
     }
-    document.getElementById('modal-name').classList.add('hidden');
+    closeModal();
 };
 
-// Eventos de Socket
+document.getElementById('btn-start').onclick = () => {
+    if (currentRoomCode) socket.emit('startGame', currentRoomCode);
+};
+
 socket.on('roomCreated', (data) => {
+    currentRoomCode = data.code;
     document.getElementById('screen-login').classList.add('hidden');
     document.getElementById('screen-lobby').classList.remove('hidden');
     document.getElementById('display-room-code').innerText = data.code;
     updateGrid(data.players);
 });
 
-socket.on('updatePlayerList', (players) => {
-    updateGrid(players);
+socket.on('updatePlayerList', (players) => updateGrid(players));
+
+socket.on('gameStarted', (data) => {
+    document.getElementById('screen-lobby').classList.add('hidden');
+    
+    const gameUI = document.createElement('div');
+    gameUI.className = 'game-ui';
+    
+    gameUI.innerHTML = `
+        <div class="role-header ${data.role.toLowerCase()}">
+            <h2>ERES ${data.role}</h2>
+            <p>Hay ${data.impostorsCount} impostor(es) infiltrado(s).</p>
+        </div>
+        
+        <div class="secret-word-box">
+            <p>TU PALABRA SECRETA ES:</p>
+            <h1 class="word-highlight">${data.palabra.toUpperCase()}</h1>
+        </div>
+
+        <div class="instructions">
+            <h3>¿QUÉ HACER AHORA?</h3>
+            <ol>
+                <li>Piensa en <b>una sola palabra</b> que describa la tuya.</li>
+                <li>Dila en voz alta cuando sea tu turno.</li>
+                <li>Escucha a los demás: ¡el impostor tiene una palabra distinta!</li>
+            </ol>
+        </div>
+
+        <div class="game-actions">
+            <button class="btn-report" onclick="alert('Iniciando votación...')">DEBATIR Y VOTAR</button>
+        </div>
+    `;
+    document.body.appendChild(gameUI);
 });
 
 function updateGrid(players) {
@@ -67,5 +102,3 @@ function updateGrid(players) {
             </div>`;
     });
 }
-
-socket.on('errorMsg', (msg) => alert(msg));
