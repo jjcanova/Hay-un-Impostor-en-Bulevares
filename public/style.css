@@ -1,0 +1,132 @@
+:root {
+    --primary-violet: #7c4dff;
+    --accent-violet: #b388ff;
+    --bg-dark: #0a0b10;
+    --bg-panel: #14151f;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #2a2b3d;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hidden { display: none !important; }
+
+/* HEADER */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    font-size: 2rem;
+    letter-spacing: 3px;
+    margin: 0;
+    background: linear-gradient(to bottom, #fff, var(--primary-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+/* CAJA PRINCIPAL */
+.setup-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* ESTILOS DE REVELAR (ARREGLADO) */
+.blur-content {
+    cursor: pointer;
+    position: relative;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    background: #000; /* Fondo negro puro para que no transparente nada */
+    min-height: 120px; /* Altura mínima para que no salte al revelar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.real-content {
+    filter: blur(25px);
+    opacity: 0;
+    padding: 20px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 100%;
+    pointer-events: none; /* Evita que interfiera con el click mientras está oculto */
+}
+
+.tap-hint {
+    position: absolute;
+    color: var(--accent-violet);
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    transition: opacity 0.2s ease;
+    text-align: center;
+}
+
+/* EL TRUCO: Cuando se revela, ocultamos el hint y desenfocamos el contenido */
+.blur-content.revealed .real-content {
+    filter: blur(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.blur-content.revealed .tap-hint {
+    opacity: 0; /* Desaparece suavemente */
+    pointer-events: none;
+}
+
+/* ELEMENTOS DE JUEGO */
+.word-highlight {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px var(--primary-violet);
+}
+
+.role-header.impostor h2 { color: #ff1744; }
+.role-header.detective h2 { color: #00e5ff; }
+
+/* BOTONES */
+.btn-primary {
+    background: var(--primary-violet);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1rem;
+    width:
