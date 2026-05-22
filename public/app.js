@@ -25,7 +25,7 @@ document.getElementById('btn-join').onclick = () => {
         pendingCode = code;
         document.getElementById('modal-name').classList.remove('hidden');
     } else {
-        alert("Código de 6 letras.");
+        alert("Escribe el código de 6 letras.");
     }
 };
 
@@ -63,35 +63,49 @@ socket.on('gameStarted', (data) => {
 
     const content = document.getElementById('game-content');
     content.innerHTML = `
-        <div id="role-box" class="role-header blur-content" onclick="toggleVisibility('role-box')">
-            <p class="tap-hint">TAP PARA VER ROL</p>
-            <div class="real-content">
-                <h2 class="${data.role.toLowerCase()}">ERES ${data.role}</h2>
-                <p>Hay ${data.count} impostor(es).</p>
+        <div id="game-phase-reveal">
+            <div id="role-box" class="role-header blur-content" onclick="toggleVisibility('role-box')">
+                <p class="tap-hint">TAP PARA VER ROL</p>
+                <div class="real-content">
+                    <h2 class="${data.role.toLowerCase()}">ERES ${data.role}</h2>
+                    <p>Hay ${data.count} impostor(es).</p>
+                </div>
             </div>
-        </div>
-        
-        <div id="word-box" class="secret-word-box blur-content" onclick="toggleVisibility('word-box')">
-            <p class="tap-hint">TAP PARA VER PALABRA</p>
-            <div class="real-content">
-                <p>TU PALABRA SECRETA ES:</p>
-                <h1 class="word-highlight">${data.palabra.toUpperCase()}</h1>
+            
+            <div id="word-box" class="secret-word-box blur-content" onclick="toggleVisibility('word-box')">
+                <p class="tap-hint">TAP PARA VER PALABRA</p>
+                <div class="real-content">
+                    <p>TU PALABRA SECRETA ES:</p>
+                    <h1 class="word-highlight">${data.palabra.toUpperCase()}</h1>
+                </div>
             </div>
+
+            <button class="btn-primary" style="margin-top:20px" onclick="setReady(${data.isHost})">¡LISTO! YA LA VI</button>
         </div>
 
-        <div class="instructions">
-            <h3>INSTRUCCIONES</h3>
-            <p>1. Mira tu palabra en secreto.<br>2. Ocúltala de nuevo.<br>3. Di tu pista al grupo.</p>
+        <div id="game-phase-debate" class="hidden">
+            <div class="setup-box">
+                <h2 class="highlight-text">FASE DE DEBATE</h2>
+                <p>Den sus pistas uno por uno. Al terminar, debatan quién es el impostor.</p>
+                <div class="divider"></div>
+                ${data.isHost ? `<button class="btn-primary" onclick="nextRound()">SIGUIENTE RONDA</button>` : `<p class="text-muted">Esperando que el anfitrión inicie otra ronda...</p>`}
+                <button onclick="location.reload()" class="btn-secondary" style="margin-top:10px; width:100%">SALIR AL MENÚ</button>
+            </div>
         </div>
-
-        <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px">SALIR AL MENÚ</button>
     `;
 });
 
-// FUNCIÓN PARA REVELAR/OCULTAR
 window.toggleVisibility = function(id) {
-    const el = document.getElementById(id);
-    el.classList.toggle('revealed');
+    document.getElementById(id).classList.toggle('revealed');
+};
+
+window.setReady = function(isHost) {
+    document.getElementById('game-phase-reveal').classList.add('hidden');
+    document.getElementById('game-phase-debate').classList.remove('hidden');
+};
+
+window.nextRound = function() {
+    socket.emit('nextRound', currentRoomCode);
 };
 
 function updateGrid(players) {

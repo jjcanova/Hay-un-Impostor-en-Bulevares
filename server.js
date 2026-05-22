@@ -18,8 +18,30 @@ const PALABRAS = [
     { a: "Gato", b: "Perro" },
     { a: "WhatsApp", b: "Instagram" },
     { a: "Bulevar", b: "Costanera" },
-    { a: "Facultad", b: "Biblioteca" }
+    { a: "Facultad", b: "Biblioteca" },
+    { a: "Liso", b: "Cerveza artesanal" },
+    { a: "Alfajor", b: "Galletita" }
 ];
+
+function iniciarJuego(code) {
+    const room = rooms[code];
+    room.status = 'playing';
+    const pareja = PALABRAS[Math.floor(Math.random() * PALABRAS.length)];
+    let shuffled = [...room.players].sort(() => 0.5 - Math.random());
+    let numImpostors = Math.min(room.settings.maxImpostors, room.players.length - 1);
+    if (numImpostors < 1) numImpostors = 1;
+    const impostorIds = shuffled.slice(0, numImpostors).map(p => p.id);
+
+    room.players.forEach(p => {
+        const isImp = impostorIds.includes(p.id);
+        io.to(p.id).emit('gameStarted', {
+            role: isImp ? 'IMPOSTOR' : 'DETECTIVE',
+            palabra: isImp ? pareja.b : pareja.a,
+            count: numImpostors,
+            isHost: p.id === room.host
+        });
+    });
+}
 
 io.on('connection', (socket) => {
     socket.on('createRoom', (data) => {
@@ -47,26 +69,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('startGame', (code) => {
-        const room = rooms[code.toUpperCase()];
-        if (room && socket.id === room.host) {
-            room.status = 'playing';
-            const pareja = PALABRAS[Math.floor(Math.random() * PALABRAS.length)];
-            let shuffled = [...room.players].sort(() => 0.5 - Math.random());
-            let numImpostors = Math.min(room.settings.maxImpostors, room.players.length - 1);
-            if (numImpostors < 1) numImpostors = 1;
-            const impostorIds = shuffled.slice(0, numImpostors).map(p => p.id);
-
-            room.players.forEach(p => {
-                const isImp = impostorIds.includes(p.id);
-                io.to(p.id).emit('gameStarted', {
-                    role: isImp ? 'IMPOSTOR' : 'DETECTIVE',
-                    palabra: isImp ? pareja.b : pareja.a,
-                    count: numImpostors
-                });
-            });
+        if (rooms[code.toUpperCase()] && socket.id === rooms[code.toUpperCase()].host) {
+            iniciarJuego(code.toUpperCase());
         }
     });
+
+    socket.on('nextRound', (code) => {
+        if (rooms[code.toUpperCase()] && socket.id === rooms[code.toUpperCase()].host) {
+            iniciarJuego(code.toUpperCase());
+        }
+    });
+
+    socket.on('disconnect', () => { console.log("Usuario desconectado"); });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log("Servidor listo"));
+server.listen(PORT, () => console.log("Servidor en marcha"));
