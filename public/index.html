@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hay un impostor en Bulevares</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>HAY UN IMPOSTOR<br>EN BULEVARES</h1>
+            <p class="subtitle">¿QUIÉN MIENTE MEJOR?</p>
+        </header>
+
+        <main id="screen-login" class="setup-box">
+            <h3 class="panel-title">CONFIGURACIÓN</h3>
+            
+            <div class="stepper-group">
+                <label>MÁX. JUGADORES</label>
+                <div class="stepper">
+                    <button class="step-btn" onclick="changeValue('players', -1)">-</button>
+                    <span id="val-players" class="step-value">15</span>
+                    <button class="step-btn" onclick="changeValue('players', 1)">+</button>
+                </div>
+            </div>
+
+            <div class="stepper-group">
+                <label>MÁX. IMPOSTORES</label>
+                <div class="stepper">
+                    <button class="step-btn" onclick="changeValue('impostors', -1)">-</button>
+                    <span id="val-impostors" class="step-value">2</span>
+                    <button class="step-btn" onclick="changeValue('impostors', 1)">+</button>
+                </div>
+            </div>
+
+            <button id="btn-create" class="btn-primary">CREAR SALA</button>
+
+            <div class="divider"><span>O</span></div>
+
+            <div class="join-panel">
+                <input type="text" id="room-code" placeholder="CÓDIGO DE SALA" maxlength="6">
+                <button id="btn-join" class="btn-secondary-full">UNIRSE A LA PARTIDA</button>
+            </div>
+        </main>
+
+        <main id="screen-lobby" class="setup-box hidden">
+            <div class="lobby-header">
+                <p class="lobby-label">CÓDIGO DE ACCESO</p>
+                <h2 id="display-room-code" class="highlight-text">------</h2>
+                <div class="pulse-status">ESPERANDO JUGADORES...</div>
+            </div>
+            <div id="players-grid" class="players-grid"></div>
+            <button id="btn-start" class="btn-primary">INICIAR PARTIDA</button>
+            <button onclick="location.reload()" class="btn-link-exit">ABANDONAR</button>
+        </main>
+
+        <main id="screen-game" class="setup-box hidden">
+            <div id="game-content"></div>
+        </main>
+
+        <div id="modal-name" class="modal hidden">
+            <div class="modal-card">
+                <div class="modal-glow"></div>
+                <h3 class="panel-title">IDENTIFÍCATE</h3>
+                <input type="text" id="player-name-input" placeholder="Tu alias..." maxlength="15">
+                <button id="btn-confirm-name" class="btn-primary">CONFIRMAR</button>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
