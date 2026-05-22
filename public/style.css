@@ -310,3 +310,150 @@ small {
 }
 
 .instructions b { color: var(--accent-violet); }
+:root {
+    --primary-violet: #7c4dff;
+    --accent-violet: #b388ff;
+    --bg-dark: #0a0b10;
+    --bg-panel: #14151f;
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #2a2b3d;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden { display: none !important; 
+}
+
+/* ESTILOS DE REVELAR (LA NOVEDAD) */
+.blur-content {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.blur-content .real-content {
+    filter: blur(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.blur-content .tap-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: var(--accent-violet);
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+}
+
+.blur-content.revealed .real-content {
+    filter: blur(0);
+    opacity: 1;
+}
+
+.blur-content.revealed .tap-hint {
+    display: none;
+}
+
+/* HEADERS Y BOXES */
+.setup-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.role-header {
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #2a2b3d;
+}
+
+.role-header.impostor .real-content h2 { color: #ff1744; }
+.role-header.detective .real-content h2 { color: #00e5ff; }
+
+.secret-word-box {
+    background: linear-gradient(145deg, #1e1e2e, #2a2a40);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid var(--border-color);
+}
+
+.word-highlight {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    text-shadow: 0 0 15px var(--primary-violet);
+}
+
+/* BOTONES Y INPUTS (Mantenemos tu estética) */
+.btn-primary {
+    background: var(--primary-violet);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.player-card {
+    background: #1a1b26;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.player-card.host { border-color: #ffca28; }
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}

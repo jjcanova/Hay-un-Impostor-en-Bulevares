@@ -57,31 +57,42 @@ socket.on('roomCreated', (data) => {
 socket.on('updatePlayerList', (players) => updateGrid(players));
 
 socket.on('gameStarted', (data) => {
-    // Ocultar Lobby y mostrar Pantalla de Juego
     document.getElementById('screen-lobby').classList.add('hidden');
     const screenGame = document.getElementById('screen-game');
     screenGame.classList.remove('hidden');
 
     const content = document.getElementById('game-content');
     content.innerHTML = `
-        <div class="role-header ${data.role.toLowerCase()}">
-            <h2>ERES ${data.role}</h2>
-            <p>Hay ${data.count} impostor(es) infiltrado(s).</p>
+        <div id="role-box" class="role-header blur-content" onclick="toggleVisibility('role-box')">
+            <p class="tap-hint">TAP PARA VER ROL</p>
+            <div class="real-content">
+                <h2 class="${data.role.toLowerCase()}">ERES ${data.role}</h2>
+                <p>Hay ${data.count} impostor(es).</p>
+            </div>
         </div>
         
-        <div class="secret-word-box">
-            <p>TU PALABRA SECRETA ES:</p>
-            <h1 class="word-highlight">${data.palabra.toUpperCase()}</h1>
+        <div id="word-box" class="secret-word-box blur-content" onclick="toggleVisibility('word-box')">
+            <p class="tap-hint">TAP PARA VER PALABRA</p>
+            <div class="real-content">
+                <p>TU PALABRA SECRETA ES:</p>
+                <h1 class="word-highlight">${data.palabra.toUpperCase()}</h1>
+            </div>
         </div>
 
         <div class="instructions">
-            <h3>¿QUÉ HACER?</h3>
-            <p>Piensa en <b>una sola palabra</b> descriptiva. Si eres impostor, ¡intenta descubrir la palabra de los detectives!</p>
+            <h3>INSTRUCCIONES</h3>
+            <p>1. Mira tu palabra en secreto.<br>2. Ocúltala de nuevo.<br>3. Di tu pista al grupo.</p>
         </div>
 
-        <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px">VOLVER AL INICIO</button>
+        <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px">SALIR AL MENÚ</button>
     `;
 });
+
+// FUNCIÓN PARA REVELAR/OCULTAR
+window.toggleVisibility = function(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('revealed');
+};
 
 function updateGrid(players) {
     const grid = document.getElementById('players-grid');
@@ -96,5 +107,3 @@ function updateGrid(players) {
             </div>`;
     });
 }
-
-socket.on('errorMsg', (msg) => alert(msg));
