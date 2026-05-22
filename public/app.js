@@ -57,15 +57,16 @@ socket.on('roomCreated', (data) => {
 socket.on('updatePlayerList', (players) => updateGrid(players));
 
 socket.on('gameStarted', (data) => {
+    // Ocultar Lobby y mostrar Pantalla de Juego
     document.getElementById('screen-lobby').classList.add('hidden');
-    
-    const gameUI = document.createElement('div');
-    gameUI.className = 'game-ui';
-    
-    gameUI.innerHTML = `
+    const screenGame = document.getElementById('screen-game');
+    screenGame.classList.remove('hidden');
+
+    const content = document.getElementById('game-content');
+    content.innerHTML = `
         <div class="role-header ${data.role.toLowerCase()}">
             <h2>ERES ${data.role}</h2>
-            <p>Hay ${data.impostorsCount} impostor(es) infiltrado(s).</p>
+            <p>Hay ${data.count} impostor(es) infiltrado(s).</p>
         </div>
         
         <div class="secret-word-box">
@@ -74,19 +75,12 @@ socket.on('gameStarted', (data) => {
         </div>
 
         <div class="instructions">
-            <h3>¿QUÉ HACER AHORA?</h3>
-            <ol>
-                <li>Piensa en <b>una sola palabra</b> que describa la tuya.</li>
-                <li>Dila en voz alta cuando sea tu turno.</li>
-                <li>Escucha a los demás: ¡el impostor tiene una palabra distinta!</li>
-            </ol>
+            <h3>¿QUÉ HACER?</h3>
+            <p>Piensa en <b>una sola palabra</b> descriptiva. Si eres impostor, ¡intenta descubrir la palabra de los detectives!</p>
         </div>
 
-        <div class="game-actions">
-            <button class="btn-report" onclick="alert('Iniciando votación...')">DEBATIR Y VOTAR</button>
-        </div>
+        <button onclick="location.reload()" class="btn-secondary" style="margin-top:20px">VOLVER AL INICIO</button>
     `;
-    document.body.appendChild(gameUI);
 });
 
 function updateGrid(players) {
@@ -102,3 +96,5 @@ function updateGrid(players) {
             </div>`;
     });
 }
+
+socket.on('errorMsg', (msg) => alert(msg));
