@@ -76,3 +76,34 @@ io.on('connection', (socket) => {
                 io.to(code).emit('updatePlayerList', room.players);
             } else {
                 socket.emit('errorMsg', "La sala está llena.");
+            }
+        } else {
+            socket.emit('errorMsg', "Sala no disponible.");
+        }
+    });
+
+    socket.on('startGame', (code) => {
+        const room = rooms[code.toUpperCase()];
+        if (room && socket.id === room.host) {
+            if (room.players.length >= 3) { // Mínimo 3 para jugar
+                iniciarJuego(code.toUpperCase());
+            } else {
+                socket.emit('errorMsg', "Necesitas al menos 3 jugadores.");
+            }
+        }
+    });
+
+    socket.on('nextRound', (code) => {
+        if (rooms[code.toUpperCase()] && socket.id === rooms[code.toUpperCase()].host) {
+            iniciarJuego(code.toUpperCase());
+        }
+    });
+
+    socket.on('disconnect', () => {
+        // Limpieza básica si todos se van (opcional)
+        console.log("Usuario fuera");
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log("Servidor multijugador listo"));
