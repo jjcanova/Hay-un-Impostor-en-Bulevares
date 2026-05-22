@@ -19,20 +19,29 @@ const PALABRAS = [
     { a: "WhatsApp", b: "Instagram" },
     { a: "Bulevar", b: "Costanera" },
     { a: "Facultad", b: "Biblioteca" },
-    { a: "Liso", b: "Cerveza artesanal" },
-    { a: "Alfajor", b: "Galletita" }
+    { a: "Liso", b: "Artesanal" },
+    { a: "Alfajor", b: "Galletita" },
+    { a: "Invierno", b: "Verano" },
+    { a: "Asado", b: "Locro" }
 ];
 
 function iniciarJuego(code) {
     const room = rooms[code];
     room.status = 'playing';
+    
     const pareja = PALABRAS[Math.floor(Math.random() * PALABRAS.length)];
-    let shuffled = [...room.players].sort(() => 0.5 - Math.random());
-    let numImpostors = Math.min(room.settings.maxImpostors, room.players.length - 1);
+    const jugadoresActuales = room.players; // Usamos los que están, no el máximo
+    
+    let shuffled = [...jugadoresActuales].sort(() => 0.5 - Math.random());
+    
+    // Calculamos impostores basados en los presentes
+    // Si hay pocos, bajamos el número automáticamente para no romper el juego
+    let numImpostors = Math.min(room.settings.maxImpostors, jugadoresActuales.length - 1);
     if (numImpostors < 1) numImpostors = 1;
+
     const impostorIds = shuffled.slice(0, numImpostors).map(p => p.id);
 
-    room.players.forEach(p => {
+    jugadoresActuales.forEach(p => {
         const isImp = impostorIds.includes(p.id);
         io.to(p.id).emit('gameStarted', {
             role: isImp ? 'IMPOSTOR' : 'DETECTIVE',
@@ -58,30 +67,12 @@ io.on('connection', (socket) => {
 
     socket.on('joinRoom', (data) => {
         const code = data.code.toUpperCase();
-        if (rooms[code] && rooms[code].status === 'waiting') {
-            rooms[code].players.push({ id: socket.id, username: data.username });
-            socket.join(code);
-            socket.emit('roomCreated', { code, players: rooms[code].players });
-            io.to(code).emit('updatePlayerList', rooms[code].players);
-        } else {
-            socket.emit('errorMsg', "No se pudo unir.");
-        }
-    });
-
-    socket.on('startGame', (code) => {
-        if (rooms[code.toUpperCase()] && socket.id === rooms[code.toUpperCase()].host) {
-            iniciarJuego(code.toUpperCase());
-        }
-    });
-
-    socket.on('nextRound', (code) => {
-        if (rooms[code.toUpperCase()] && socket.id === rooms[code.toUpperCase()].host) {
-            iniciarJuego(code.toUpperCase());
-        }
-    });
-
-    socket.on('disconnect', () => { console.log("Usuario desconectado"); });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log("Servidor en marcha"));
+        const room = rooms[code];
+        if (room && room.status === 'waiting') {
+            if (room.players.length < room.settings.maxPlayers) {
+                room.players.push({ id: socket.id, username: data.username });
+                socket.join(code);
+                socket.emit('roomCreated', { code, players: room.players });
+                io.to(code).emit('updatePlayerList', room.players);
+            } else {
+                socket.emit('errorMsg', "La sala está llena.");

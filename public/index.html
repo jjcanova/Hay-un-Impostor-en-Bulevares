@@ -10,14 +10,14 @@
     <div class="game-container">
         <header class="game-header">
             <h1>HAY UN IMPOSTOR<br>EN BULEVARES</h1>
-            <p class="subtitle">¿QUIÉN SE OCULTA EN LA SOBERBIA DE LA OSCURIDAD?</p>
+            <p class="subtitle">DEDUCCIÓN Y SOBERBIA EN SANTA FE</p>
         </header>
 
         <main id="screen-login" class="setup-box">
             <div class="panel-settings">
-                <h3 class="panel-title">CONFIGURACIÓN DE PARTIDA</h3>
+                <h3 class="panel-title">CONFIGURACIÓN</h3>
                 <div class="stepper-group">
-                    <label>JUGADORES:</label>
+                    <label>MÁX. JUGADORES:</label>
                     <div class="stepper">
                         <button class="step-btn" onclick="changeValue('players', -1)">-</button>
                         <span id="val-players" class="step-value">15</span>
@@ -25,10 +25,10 @@
                     </div>
                 </div>
                 <div class="stepper-group">
-                    <label>IMPOSTORES:</label>
+                    <label>MÁX. IMPOSTORES:</label>
                     <div class="stepper">
                         <button class="step-btn" onclick="changeValue('impostors', -1)">-</button>
-                        <span id="val-impostors" class="step-value">7</span>
+                        <span id="val-impostors" class="step-value">2</span>
                         <button class="step-btn" onclick="changeValue('impostors', 1)">+</button>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <button id="btn-create" class="btn-primary">CREAR SALA</button>
                 <div class="divider"><span>o</span></div>
                 <div class="join-group">
-                    <input type="text" id="room-code" placeholder="Código..." maxlength="6">
+                    <input type="text" id="room-code" placeholder="Código de sala..." maxlength="6">
                     <button id="btn-join" class="btn-secondary">UNIRSE</button>
                 </div>
             </div>
@@ -47,11 +47,12 @@
             <div class="lobby-header">
                 <p class="lobby-label">CÓDIGO DE ACCESO</p>
                 <h2 id="display-room-code" class="highlight-text">------</h2>
+                <p style="font-size: 0.7rem; color: #7c4dff;">Mínimo 3 jugadores para iniciar</p>
             </div>
             <div id="players-grid" class="players-grid"></div>
             <div class="action-buttons">
                 <button id="btn-start" class="btn-primary">INICIAR PARTIDA</button>
-                <button onclick="location.reload()" class="btn-secondary">SALIR</button>
+                <button onclick="location.reload()" class="btn-secondary">ABANDONAR</button>
             </div>
         </main>
 
@@ -62,9 +63,9 @@
         <div id="modal-name" class="modal hidden">
             <div class="setup-box modal-content">
                 <h3 class="panel-title">IDENTIFÍCATE</h3>
-                <input type="text" id="player-name-input" placeholder="Tu alias soberbio..." maxlength="15">
-                <button id="btn-confirm-name" class="btn-primary">ENTRAR A LA OSCURIDAD</button>
-                <button onclick="closeModal()" class="btn-secondary" style="margin-top:10px; width:100%">CANCELAR</button>
+                <input type="text" id="player-name-input" placeholder="Tu alias..." maxlength="15">
+                <button id="btn-confirm-name" class="btn-primary">CONFIRMAR</button>
+                <button onclick="closeModal()" class="btn-secondary" style="margin-top:10px; width:100%">ATRÁS</button>
             </div>
         </div>
     </div>

@@ -6,12 +6,13 @@ window.changeValue = function(type, delta) {
     const id = type === 'players' ? 'val-players' : 'val-impostors';
     const el = document.getElementById(id);
     let val = parseInt(el.innerText);
-    val = type === 'players' ? Math.min(30, Math.max(1, val + delta)) : Math.min(15, Math.max(1, val + delta));
+    val = type === 'players' ? Math.min(30, Math.max(3, val + delta)) : Math.min(15, Math.max(1, val + delta));
     el.innerText = val;
 };
 
 window.closeModal = function() {
     document.getElementById('modal-name').classList.add('hidden');
+    pendingCode = null;
 };
 
 document.getElementById('btn-create').onclick = () => {
@@ -25,13 +26,15 @@ document.getElementById('btn-join').onclick = () => {
         pendingCode = code;
         document.getElementById('modal-name').classList.remove('hidden');
     } else {
-        alert("Escribe el código de 6 letras.");
+        alert("El código debe tener 6 letras.");
     }
 };
 
 document.getElementById('btn-confirm-name').onclick = () => {
-    const name = document.getElementById('player-name-input').value.trim();
-    if (!name) return;
+    const nameInput = document.getElementById('player-name-input');
+    const name = nameInput.value.trim();
+    if (!name) return alert("Elegí un nombre.");
+
     if (pendingCode) {
         socket.emit('joinRoom', { username: name, code: pendingCode });
     } else {
@@ -43,7 +46,9 @@ document.getElementById('btn-confirm-name').onclick = () => {
 };
 
 document.getElementById('btn-start').onclick = () => {
-    if (currentRoomCode) socket.emit('startGame', currentRoomCode);
+    if (currentRoomCode) {
+        socket.emit('startGame', currentRoomCode);
+    }
 };
 
 socket.on('roomCreated', (data) => {
@@ -54,7 +59,9 @@ socket.on('roomCreated', (data) => {
     updateGrid(data.players);
 });
 
-socket.on('updatePlayerList', (players) => updateGrid(players));
+socket.on('updatePlayerList', (players) => {
+    updateGrid(players);
+});
 
 socket.on('gameStarted', (data) => {
     document.getElementById('screen-lobby').classList.add('hidden');
@@ -80,13 +87,13 @@ socket.on('gameStarted', (data) => {
                 </div>
             </div>
 
-            <button class="btn-primary" style="margin-top:20px" onclick="setReady(${data.isHost})">¡LISTO! YA LA VI</button>
+            <button class="btn-primary" style="margin-top:20px" onclick="setReady()">¡LISTO! YA LA VI</button>
         </div>
 
         <div id="game-phase-debate" class="hidden">
             <div class="setup-box">
                 <h2 class="highlight-text">FASE DE DEBATE</h2>
-                <p>Den sus pistas uno por uno. Al terminar, debatan quién es el impostor.</p>
+                <p>Den sus pistas uno por uno. El impostor intentará camuflarse con la soberbia de un detective.</p>
                 <div class="divider"></div>
                 ${data.isHost ? `<button class="btn-primary" onclick="nextRound()">SIGUIENTE RONDA</button>` : `<p class="text-muted">Esperando que el anfitrión inicie otra ronda...</p>`}
                 <button onclick="location.reload()" class="btn-secondary" style="margin-top:10px; width:100%">SALIR AL MENÚ</button>
@@ -99,7 +106,7 @@ window.toggleVisibility = function(id) {
     document.getElementById(id).classList.toggle('revealed');
 };
 
-window.setReady = function(isHost) {
+window.setReady = function() {
     document.getElementById('game-phase-reveal').classList.add('hidden');
     document.getElementById('game-phase-debate').classList.remove('hidden');
 };
@@ -113,11 +120,14 @@ function updateGrid(players) {
     grid.innerHTML = '';
     players.forEach((p, index) => {
         const isHost = index === 0;
+        const isMe = p.id === socket.id;
         grid.innerHTML += `
             <div class="player-card ${isHost ? 'host' : ''}">
                 <div class="player-icon"></div>
-                <div class="player-name">${p.username.toUpperCase()} ${p.id === socket.id ? '(TÚ)' : ''}</div>
+                <div class="player-name">${p.username.toUpperCase()} ${isMe ? '(TÚ)' : ''}</div>
                 ${isHost ? '<div class="host-badge">ANFITRIÓN</div>' : ''}
             </div>`;
     });
 }
+
+socket.on('errorMsg', (msg) => alert(msg));
