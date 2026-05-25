@@ -1,0 +1,366 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap');
+
+:root {
+    --primary-violet: #7c4dff;
+    --accent-violet: #b388ff;
+    --bg-dark: #07080c;
+    --bg-panel: #11121d;
+    --text-main: #ffffff;
+    --text-muted: #8e90a5;
+    --border-color: #2a2b3d;
+    --danger: #ff1744;
+    --success: #00e5ff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+/* --- HEADER --- */
+.game-header { text-align: center; margin-bottom: 30px; }
+.game-header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0;
+    background: linear-gradient(to bottom, #fff, var(--primary-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+}
+.subtitle {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 8px;
+}
+
+/* --- PANELES Y CAJAS --- */
+.setup-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 30px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+}
+
+.panel-title {
+    font-size: 0.85rem;
+    color: var(--accent-violet);
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* --- DASHBOARD DEL MODERADOR (VENTANAS LATERALES) --- */
+.admin-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.admin-window {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 12px;
+    height: 340px;
+    display: flex;
+    flex-direction: column;
+}
+
+.window-title {
+    font-size: 0.6rem;
+    color: var(--accent-violet);
+    text-align: center;
+    letter-spacing: 1.5px;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    font-weight: 900;
+}
+
+.admin-scroll-list {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+}
+
+/* Scrollbar personalizada para las ventanas */
+.admin-scroll-list::-webkit-scrollbar { width: 3px; }
+.admin-scroll-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+.player-row-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.03);
+    padding: 10px 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.player-row-item:active { transform: scale(0.95); }
+
+.status-indicator {
+    width: 7px;
+    height: 7px;
+    background: #4caf50;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 8px #4caf50;
+}
+
+.player-row-item.eliminado {
+    opacity: 0.2;
+    filter: grayscale(1);
+    background: transparent;
+    border: 1px dashed var(--border-color);
+}
+
+.player-row-item.eliminado .status-indicator {
+    background: var(--danger);
+    box-shadow: 0 0 8px var(--danger);
+}
+
+.player-label { font-size: 0.7rem; font-weight: 700; color: #fff; }
+
+.secret-data-box {
+    background: rgba(124, 77, 255, 0.05);
+    border: 1px dashed var(--primary-violet);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.secret-data-box small {
+    font-size: 0.55rem;
+    color: var(--accent-violet);
+    font-weight: 900;
+    display: block;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.reveal-text { font-size: 0.85rem; font-weight: 700; margin: 0; line-height: 1.4; }
+.impostor-tags { color: var(--danger); font-size: 0.8rem; font-weight: 900; }
+
+/* --- CONTROLES Y BOTONES --- */
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 6px;
+    margin-bottom: 20px;
+}
+.step-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.step-value { font-weight: 900; font-size: 1.2rem; }
+
+.btn-primary {
+    background: var(--primary-violet);
+    color: white;
+    border: none;
+    padding: 18px;
+    border-radius: 16px;
+    font-weight: 900;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 20px rgba(124, 77, 255, 0.3);
+}
+.btn-primary:active { transform: scale(0.96); }
+
+/* --- EFECTO REVELAR (BLUR) --- */
+.blur-content {
+    cursor: pointer;
+    position: relative;
+    background: #000;
+    border-radius: 18px;
+    margin-bottom: 15px;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+.real-content {
+    filter: blur(30px);
+    opacity: 0;
+    transition: 0.5s ease-in-out;
+    text-align: center;
+    width: 100%;
+}
+.tap-hint {
+    position: absolute;
+    color: var(--accent-violet);
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.blur-content.revealed .real-content { filter: blur(0); opacity: 1; }
+.blur-content.revealed .tap-hint { display: none; }
+
+.word-highlight {
+    font-size: 2.2rem;
+    color: white;
+    text-shadow: 0 0 20px var(--primary-violet);
+}
+
+.impostor { color: var(--danger) !important; font-weight: 900; }
+.detective { color: var(--success) !important; font-weight: 900; }
+
+/* --- GRILLA LOBBY --- */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.player-card {
+    background: #000;
+    border: 1px solid var(--border-color);
+    padding: 18px 5px;
+    border-radius: 14px;
+    text-align: center;
+    font-size: 0.75rem;
+    transition: 0.3s;
+}
+.player-card.host { border-color: #ffca28; box-shadow: 0 0 15px rgba(255, 202, 40, 0.2); }
+.host-badge { color: #ffca28; font-size: 0.55rem; font-weight: 900; margin-top: 6px; letter-spacing: 1px; }
+
+/* --- MODALES --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+.modal-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 35px;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+}
+
+#player-name-input, #room-code {
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: inherit;
+}
+
+#room-code { border-color: var(--primary-violet); color: var(--accent-violet); }
+
+.btn-link-exit {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    width: 100%;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    text-decoration: underline;
+}
+
+.highlight-text {
+    font-size: 2.8rem;
+    text-align: center;
+    margin: 15px 0;
+    color: white;
+    text-shadow: 0 0 20px var(--primary-violet);
+}
+
+.divider {
+    text-align: center;
+    margin: 25px 0;
+    color: var(--border-color);
+    font-weight: 900;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border-color); }
+
+/* --- NUEVOS ESTILOS PARA INPUTS DEL PANEL ADMIN --- */
+.admin-window input {
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+.admin-window input:focus {
+    border-color: var(--primary-violet);
+    outline: none;
+}
+
+.admin-window input::placeholder {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 400;
+}
